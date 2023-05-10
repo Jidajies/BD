@@ -1,7 +1,6 @@
-#librerias
 from flask import Flask, render_template, request, Response, jsonify, redirect, url_for
 import database as dbase  
-from producto import Producto
+from producto import Product
 
 db = dbase.dbConnection()
 
@@ -14,17 +13,16 @@ def home():
     productsReceived = products.find()
     return render_template('index.html', products = productsReceived)
 
-#Crear y leer
+#Method Post
 @app.route('/products', methods=['POST'])
 def addProduct():
-    #creo mi coleccion productos y la asigno a products
-    products = db['productos']
+    products = db['products']
     name = request.form['name']
     price = request.form['price']
     quantity = request.form['quantity']
 
     if name and price and quantity:
-        product = Producto(name, price, quantity)
+        product = Product(name, price, quantity)
         products.insert_one(product.toDBCollection())
         response = jsonify({
             'name' : name,
@@ -35,14 +33,14 @@ def addProduct():
     else:
         return notFound()
 
-#Eliminar
+#Method delete
 @app.route('/delete/<string:product_name>')
 def delete(product_name):
     products = db['products']
     products.delete_one({'name' : product_name})
     return redirect(url_for('home'))
 
-#Actualizar
+#Method Put
 @app.route('/edit/<string:product_name>', methods=['POST'])
 def edit(product_name):
     products = db['products']
@@ -63,10 +61,10 @@ def notFound(error=None):
         'message': 'No encontrado ' + request.url,
         'status': '404 Not Found'
     }
-    response = jsonify(message)
     response.status_code = 404
-    return response
+    response = jsonify(message)
 
+    return response
 
 
 if __name__ == '__main__':
