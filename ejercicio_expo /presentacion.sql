@@ -23,7 +23,7 @@ db.Ejercicio.find({"name ejemplo" :"sue"})
 #
 db.Ejercicio.updateMany(
       { nombre : "Jinneth"},
-      { $set: { "Profesion" : "Ingeniero de Telecomunicaciones" },
+      { $set: { "Profesion" : "Ingeniero en Telecomunicaciones" },
       $set:{"edad": 26} }
    );
 #
